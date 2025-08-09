@@ -1,0 +1,89 @@
+// Circular Linked List Implementation
+class CircularLinkedList {
+    class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    private Node head = null;
+    private Node tail = null;
+
+    // Insert at end
+    public void insert(int data) {
+        Node newNode = new Node(data);
+        if (head == null) { // Empty list
+            head = newNode;
+            tail = newNode;
+            tail.next = head; // Circular link
+        } else {
+            tail.next = newNode;
+            tail = newNode;
+            tail.next = head; // Make circular
+        }
+    }
+
+    // Delete by value
+    public void delete(int key) {
+        if (head == null) return;
+
+        Node current = head, prev = null;
+
+        // If head node holds the key
+        if (head.data == key) {
+            if (head == tail) { // Single node
+                head = null;
+                tail = null;
+                return;
+            }
+            head = head.next;
+            tail.next = head;
+            return;
+        }
+
+        do {
+            prev = current;
+            current = current.next;
+            if (current.data == key) {
+                prev.next = current.next;
+                if (current == tail) {
+                    tail = prev;
+                }
+                break;
+            }
+        } while (current != head);
+    }
+
+    // Display list
+    public void display() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return;
+        }
+        Node temp = head;
+        do {
+            System.out.print(temp.data + " -> ");
+            temp = temp.next;
+        } while (temp != head);
+        System.out.println("(back to head)");
+    }
+}
+
+// Usage
+public class MainCircular {
+    public static void main(String[] args) {
+        CircularLinkedList list = new CircularLinkedList();
+        list.insert(10);
+        list.insert(20);
+        list.insert(30);
+
+        list.display(); // 10 -> 20 -> 30 -> (back to head)
+
+        list.delete(20);
+        list.display(); // 10 -> 30 -> (back to head)
+    }
+}
